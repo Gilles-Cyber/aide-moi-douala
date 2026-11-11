@@ -246,12 +246,12 @@ $('#s4').innerHTML = `
 $('#s5').innerHTML = `
   <div class="abs h" id="s5h" style="left:960px;top:470px;font-size:130px">${words('Trop compliqué ?')}</div>
   <div class="abs photo" id="ph5" style="left:110px;top:170px;width:620px;height:740px"><img src="../img/rep-laptop.jpg" alt=""></div>
-  <div class="abs card offer" id="of5" style="left:560px;top:250px"><div class="oi">${ic('wrench', 34)}</div><h3>Dépannage à distance</h3><div class="price"><span id="pr5">0</span><small>FCFA</small></div>
-    <ul>${['Prise en main sécurisée', 'Tu regardes, on répare', 'Satisfait ou remboursé'].map((x) => `<li>${ic('check', 24, 2.8)}${x}</li>`).join('')}</ul></div>
+  <div class="abs card offer" id="of5" style="left:560px;top:250px"><div class="oi">${ic('wrench', 34)}</div><h3>Dépannage à domicile</h3><div class="price"><span id="pr5">0</span><small>FCFA</small></div>
+    <ul>${['Un technicien vient chez toi', 'Partout à Douala', 'Satisfait ou remboursé'].map((x) => `<li>${ic('check', 24, 2.8)}${x}</li>`).join('')}</ul></div>
   <div class="abs card payc" id="pay5" style="left:1260px;top:250px">
     <div style="display:flex;gap:14px;justify-content:center"><span class="opl om" id="om5">Orange Money</span><span class="opl momo" id="mm5">MoMo</span></div>
     <div style="margin-top:40px" id="okw"><div class="okc" id="ok5">${ic('check', 64, 3)}</div></div>
-    <h4 id="pt5">Paiement reçu</h4><p>On te contacte sur WhatsApp</p></div>`;
+    <h4 id="pt5">Paiement reçu</h4><p>Un technicien arrive chez toi</p></div>`;
 
 // S6 — pour tout le monde
 $('#s6').innerHTML = `
@@ -269,7 +269,7 @@ $('#s7').innerHTML = `
   <div class="abs" id="sub7" style="left:960px;top:900px;font-size:26px;color:#c7d2fe;font-weight:600;white-space:nowrap">Sans inscription · Réponse rapide · Aussi sur WhatsApp</div>`;
 
 /* =================== animation =================== */
-const CAPS = [[0.7, 6.1, 'Ton PC rame ? Ton téléphone ne s\'allume plus ? Ta clé USB est pleine de raccourcis ?'], [13.7, 18.8, 'Tu poses ta question, sur le site ou sur WhatsApp. On te répond rapidement, pas à pas.'], [22.7, 28.3, 'Des guides clairs et des vidéos d\'une minute règlent la plupart des pannes.'], [31.2, 37.5, 'Trop compliqué ? Dépannage à distance dès 5 000 FCFA, payé par Orange Money ou MTN MoMo.'], [40.2, 44.6, 'Étudiants, commerçants, tout le monde : plus de 400 personnes déjà aidées à Douala.']];
+const CAPS = [[0.7, 6.1, 'Ton PC rame ? Ton téléphone ne s\'allume plus ? Ta clé USB est pleine de raccourcis ?'], [13.7, 18.8, 'Tu poses ta question, sur le site ou sur WhatsApp. On te répond rapidement, pas à pas.'], [22.7, 28.3, 'Des guides clairs et des vidéos d\'une minute règlent la plupart des pannes.'], [31.2, 38.0, 'Trop compliqué ? Un technicien se déplace chez toi, dès 5 000 FCFA, payé par Orange Money ou MTN MoMo.'], [40.2, 44.6, 'Étudiants, commerçants, tout le monde : plus de 400 personnes déjà aidées à Douala.']];
 
 function s1(t) {
   if (!show($('#s1'), t, 0, 7.3)) return;
@@ -332,17 +332,17 @@ function s4(t) {
 
 function s5(t) {
   if (!show($('#s5'), t, 30.6, 40.1)) return;
-  const ex = P(t, 39.2, 0.5, 'in');
+  const ex = P(t, 39.35, 0.45, 'in');
   const hIn = rise(t, 31.2, 0.45, 60), hOut = P(t, 32.4, 0.45, 'in');
   $$('#s5h span').forEach((w, i) => { const r = rise(t, 31.2 + i * 0.12, 0.45, 60); S(w, { o: r.o * (1 - hOut), y: r.y - hOut * 80, b: r.b + hOut * 14 }); });
   S($('#s5h'), { c: true, s: 1 + hOut * 0.2 });
   const kp = P(t, 32.6, 0.9, 'expo'); S($('#ph5'), { x: (1 - kp) * -500 - ex * 900, o: clamp((t - 32.6) / 0.2), s: mix(1.08, 1, kp) });
   const ko = P(t, 32.85, 0.8, 'expo'); S($('#of5'), { y: (1 - ko) * 600 + ex * -900, o: clamp((t - 32.85) / 0.2), rx: (1 - ko) * 20 });
-  $('#pr5').textContent = fr(5000 * P(t, 33.9, 1.0));
-  const kq = P(t, 35.6, 0.8, 'expo'); S($('#pay5'), { x: (1 - kq) * 700 + ex * 900, o: clamp((t - 35.6) / 0.2) });
-  S($('#om5'), pop(t, 35.95, 0.45)); S($('#mm5'), pop(t, 36.75, 0.45));
-  const ok = clamp((t - 37.3) / 0.6); S($('#ok5'), { s: t < 37.3 ? 0 : E.spring(ok), o: clamp((t - 37.3) / 0.1) });
-  S($('#pt5'), { o: clamp((t - 37.5) / 0.3) });
+  $('#pr5').textContent = fr(5000 * P(t, 35.19, 0.8));
+  const kq = P(t, 35.95, 0.8, 'expo'); S($('#pay5'), { x: (1 - kq) * 700 + ex * 900, o: clamp((t - 35.95) / 0.2) });
+  S($('#om5'), pop(t, 36.45, 0.45)); S($('#mm5'), pop(t, 37.4, 0.45));
+  const ok = clamp((t - 37.95) / 0.6); S($('#ok5'), { s: t < 37.95 ? 0 : E.spring(ok), o: clamp((t - 37.95) / 0.1) });
+  S($('#pt5'), { o: clamp((t - 38.15) / 0.3) });
 }
 
 function s6(t) {
