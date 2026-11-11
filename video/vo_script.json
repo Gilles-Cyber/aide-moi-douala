@@ -2,12 +2,40 @@
   "voice": "fr-FR-HenriNeural",
   "rate": "+4%",
   "lines": [
-    { "id": "vo1", "start": 0.5, "text": "Ton PC rame ? Ton téléphone ne s'allume plus ? Ta clé USB est pleine de raccourcis ?" },
-    { "id": "vo2", "start": 7.0, "text": "Voici Aide-moi Douala : l'entraide informatique qui t'aide d'abord, gratuitement." },
-    { "id": "vo3", "start": 13.5, "text": "Tu poses ta question, sur le site ou sur WhatsApp. Ryan te répond pas à pas, souvent en moins de deux heures." },
-    { "id": "vo4", "start": 22.5, "text": "Des guides clairs et des vidéos d'une minute règlent la plupart des pannes : virus, PC lent, CV, Excel." },
-    { "id": "vo5", "start": 31.0, "text": "Trop compliqué ? On s'en occupe : dépannage à distance dès cinq mille francs, payé par Orange Money ou MTN MoMo." },
-    { "id": "vo6", "start": 40.0, "text": "Étudiants, commerçants, tout le monde à Douala : plus de quatre cents personnes déjà aidées." },
-    { "id": "vo7", "start": 47.5, "text": "Aide-moi Douala. Tu poses ta question. On t'aide." }
+    {
+      "id": "vo1",
+      "start": 0.5,
+      "text": "Ton PC rame ? Ton téléphone ne s'allume plus ? Ta clé USB est pleine de raccourcis ?"
+    },
+    {
+      "id": "vo2",
+      "start": 7.0,
+      "text": "Voici Aide-moi : l'entraide informatique qui t'aide d'abord, gratuitement."
+    },
+    {
+      "id": "vo3",
+      "start": 13.5,
+      "text": "Tu poses ta question, sur le site ou sur WhatsApp. On te répond rapidement, pas à pas."
+    },
+    {
+      "id": "vo4",
+      "start": 22.5,
+      "text": "Des guides clairs et des vidéos d'une minute règlent la plupart des pannes : virus, PC lent, CV, Excel."
+    },
+    {
+      "id": "vo5",
+      "start": 31.0,
+      "text": "Trop compliqué ? On s'en occupe : dépannage à distance dès cinq mille francs, payé par Orange Money ou MTN MoMo."
+    },
+    {
+      "id": "vo6",
+      "start": 40.0,
+      "text": "Étudiants, commerçants, tout le monde : plus de quatre cents personnes déjà aidées à Douala."
+    },
+    {
+      "id": "vo7",
+      "start": 47.3,
+      "text": "Aide-moi. Pose ta question gratuitement, sur aide-moi point vercel point app."
+    }
   ]
 }

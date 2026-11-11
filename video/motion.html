@@ -17,9 +17,18 @@ html, body { width: 100%; height: 100%; background: #04070f; overflow: hidden; }
 .scene { position: absolute; inset: 0; }
 img { display: block; }
 .glow { position: absolute; border-radius: 50%; filter: blur(80px); }
-#g1 { width: 1000px; height: 1000px; background: radial-gradient(circle, rgba(79,70,229,.55), transparent 65%); }
-#g2 { width: 800px; height: 800px; background: radial-gradient(circle, rgba(124,58,237,.45), transparent 65%); }
-#grid { position: absolute; inset: -100px; background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px); background-size: 80px 80px; }
+#bg { position: absolute; inset: 0; background: radial-gradient(1400px 900px at 50% 120%, #1b1450 0%, transparent 60%), linear-gradient(170deg, #0d1230 0%, #090d22 55%, #05070f 100%); }
+.au { position: absolute; border-radius: 50%; filter: blur(90px); mix-blend-mode: screen; }
+#au1 { width: 1500px; height: 520px; background: linear-gradient(90deg, rgba(99,102,241,0), rgba(99,102,241,.75), rgba(124,58,237,.6), rgba(124,58,237,0)); }
+#au2 { width: 1300px; height: 420px; background: linear-gradient(90deg, rgba(16,185,129,0), rgba(45,212,191,.35), rgba(99,102,241,.45), rgba(99,102,241,0)); }
+#au3 { width: 900px; height: 900px; background: radial-gradient(circle, rgba(167,139,250,.45), transparent 62%); }
+#beam { position: absolute; left: -400px; top: -300px; width: 900px; height: 1800px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.05), transparent); }
+#bubbles { position: absolute; inset: 0; }
+#grain { position: absolute; inset: 0; opacity: .09; mix-blend-mode: overlay; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.urlpill { display: inline-flex; align-items: center; gap: 18px; padding: 20px 22px 20px 32px; border-radius: 99px; background: linear-gradient(110deg, #fff 40%, #eef0ff 50%, #fff 60%); background-size: 300% 100%; color: var(--ink); box-shadow: 0 30px 70px -20px rgba(99,102,241,.7), 0 0 0 8px rgba(255,255,255,.08); white-space: nowrap; }
+.urlpill > svg { color: var(--p); }
+.urlpill b { font-size: 46px; letter-spacing: -.03em; }
+.urlpill .go { width: 64px; height: 64px; border-radius: 50%; background: var(--p); color: #fff; display: grid; place-items: center; }
 #indigo { position: absolute; inset: 0; background: radial-gradient(1200px 800px at 50% 40%, #6366f1, #3730a3 60%, #1e1b5e); opacity: 0; }
 #flash { position: absolute; inset: 0; background: radial-gradient(circle at 50% 45%, #fff, rgba(165,180,252,.6) 40%, transparent 75%); opacity: 0; }
 #vignette { position: absolute; inset: 0; background: radial-gradient(1300px 800px at 50% 50%, transparent 55%, rgba(0,0,0,.45)); pointer-events: none; }
@@ -126,9 +135,10 @@ img { display: block; }
 </head>
 <body>
 <div id="wrap"><div id="stage">
-  <div id="grid"></div>
-  <div class="glow" id="g1"></div>
-  <div class="glow" id="g2"></div>
+  <div id="bg"></div>
+  <div class="au" id="au1"></div><div class="au" id="au2"></div><div class="au" id="au3"></div>
+  <div id="beam"></div>
+  <svg id="bubbles" width="1920" height="1080" viewBox="0 0 1920 1080"></svg>
   <div id="indigo"></div>
   <section class="scene" id="s1"></section>
   <section class="scene" id="s2"></section>
@@ -142,6 +152,7 @@ img { display: block; }
   <div id="flash"></div>
   <div class="abs" id="cap"></div>
   <div id="prog"></div>
+  <div id="grain"></div>
   <div id="black"></div>
 </div></div>
 
@@ -182,7 +193,10 @@ const words = (txt, cls = '') => txt.split(' ').map((w) => `<span class="${cls}"
 const at = (x, y) => `style="left:${x}px;top:${y}px"`;
 
 /* =================== construction =================== */
-$('#mark').innerHTML = `${AMD.logoMark(44)}<div><b>Aide-moi</b><small>DOUALA</small></div>`;
+$('#mark').innerHTML = `${AMD.logoMark(44)}<div><b>Aide-moi</b></div>`;
+const BUBS = Array.from({ length: 16 }, (_, i) => ({ x: (i * 241 + 90) % 1920, y: (i * 523) % 1300, s: 1.6 + ((i * 37) % 7) * 0.55, r: ((i * 53) % 40) - 20, v: 10 + ((i * 29) % 5) * 5, f: i % 4 === 0 }));
+const BUB = 'M11 13.5a4.5 4.5 0 0 1 4.5-4.5h9A4.5 4.5 0 0 1 29 13.5v6a4.5 4.5 0 0 1-4.5 4.5H19l-5.2 4.2c-.6.5-1.5 0-1.5-.8V23.6A4.5 4.5 0 0 1 11 19.5z';
+$('#bubbles').innerHTML = `<defs><linearGradient id="bf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#818cf8" stop-opacity=".22"/><stop offset="1" stop-color="#a78bfa" stop-opacity=".04"/></linearGradient></defs>` + BUBS.map((b, i) => `<g id="bb${i}"><path d="${BUB}" transform="translate(-20 -18)" fill="${b.f ? 'url(#bf)' : 'none'}" stroke="rgba(199,210,254,${b.f ? '.18' : '.1'})" stroke-width="${(1.4 / b.s).toFixed(2)}"/>${b.f ? '' : `<path d="m15.6 16.6 2.9 2.9 5.9-5.9" transform="translate(-20 -18)" fill="none" stroke="rgba(199,210,254,.08)" stroke-width="${(1.4 / b.s).toFixed(2)}" stroke-linecap="round"/>`}</g>`).join('');
 
 // S1 — les galères
 const PROBS = [['../img/b-pc.jpg', 'laptop', 'PC lent', 'Ton PC rame ?', 130, 0.7], ['../img/rep-screen.jpg', 'smartphone', 'Écran noir', 'Ton téléphone ne s\'allume plus ?', 725, 2.37], ['../img/b-usb.jpg', 'fileText', 'Raccourcis', 'Ta clé USB est pleine de raccourcis ?', 1320, 4.47]];
@@ -196,16 +210,15 @@ $('#s1').innerHTML = PROBS.map(([img, i, tag, txt, x], k) => `<div class="abs ca
 $('#s2').innerHTML = `
   <div class="abs" id="logoBig" style="left:960px;top:330px">${AMD.logoMark(220)}</div>
   <div class="abs word" id="w2" style="left:960px;top:540px">${[...'Aide-moi'].map((c) => `<i>${c}</i>`).join('')}</div>
-  <div class="abs douala" id="dla" style="left:960px;top:650px">DOUALA</div>
-  <div class="abs h" id="tg2" style="left:960px;top:780px;font-size:54px">${words('L\'entraide informatique qui t\'aide d\'abord,')} <span class="pill gratuit" style="font-size:44px;padding:10px 26px;vertical-align:6px">gratuitement</span></div>`;
+  <div class="abs h" id="tg2" style="left:960px;top:720px;font-size:54px">${words('L\'entraide informatique qui t\'aide d\'abord,')} <span class="pill gratuit" style="font-size:44px;padding:10px 26px;vertical-align:6px">gratuitement</span></div>`;
 
 // S3 — question & réponse
 $('#s3').innerHTML = `
   <div class="abs step" id="st1" style="left:150px;top:300px"><span class="n">1</span><div><b>Tu poses ta question</b><small>Sur le site ou sur WhatsApp</small></div></div>
-  <div class="abs step" id="st2" style="left:150px;top:540px"><span class="n">2</span><div><b>Ryan te répond<br>pas à pas</b><small>Souvent en moins de 2 heures</small></div></div>
+  <div class="abs step" id="st2" style="left:150px;top:540px"><span class="n">2</span><div><b>On te répond<br>rapidement</b><small>Pas à pas, souvent en moins de 2 heures</small></div></div>
   <div class="abs phone" id="ph" style="left:1180px;top:110px"><div class="screen">
     <div class="notch"></div>
-    <div class="app-top">${AMD.logoMark(36)}<div><b>Aide-moi</b><small>DOUALA</small></div></div>
+    <div class="app-top">${AMD.logoMark(36)}<div><b>Aide-moi</b><small>SUPPORT</small></div></div>
     <div id="form3">
       <div class="fld"><label>C'est à propos de quoi ?</label><div class="chips"><span class="chip" id="cpc">${ic('laptop', 16)}PC lent</span><span class="chip">${ic('shield', 16)}Virus</span><span class="chip">${ic('smartphone', 16)}Téléphone</span><span class="chip">${ic('fileText', 16)}CV</span></div></div>
       <div class="fld"><label>Ton problème en une phrase</label><div class="inp" id="typ"><span id="typT"></span><i class="caret"></i></div></div>
@@ -214,7 +227,7 @@ $('#s3').innerHTML = `
     </div>
     <div class="chat" id="chat3">
       <div class="bub me" id="b1">Mon PC portable est très lent depuis hier 😩</div>
-      <div class="bub ry" id="b2"><b><img src="../img/av5.jpg" alt="">Ryan · Aide-moi Douala</b>Salut ! On règle ça en 3 étapes 👇<br>1. Ctrl + Maj + Échap → Démarrage<br>2. Désactive les programmes inutiles<br>3. Windows + R → %temp% → supprime</div>
+      <div class="bub ry" id="b2"><b>${AMD.logoMark(26)}Aide-moi · Support</b>Salut ! On règle ça en 3 étapes 👇<br>1. Ctrl + Maj + Échap → Démarrage<br>2. Désactive les programmes inutiles<br>3. Windows + R → %temp% → supprime</div>
       <div class="bub me" id="b3">Ça marche, il démarre en 1 minute 🙏</div>
     </div>
   </div></div>
@@ -238,7 +251,7 @@ $('#s5').innerHTML = `
   <div class="abs card payc" id="pay5" style="left:1260px;top:250px">
     <div style="display:flex;gap:14px;justify-content:center"><span class="opl om" id="om5">Orange Money</span><span class="opl momo" id="mm5">MoMo</span></div>
     <div style="margin-top:40px" id="okw"><div class="okc" id="ok5">${ic('check', 64, 3)}</div></div>
-    <h4 id="pt5">Paiement reçu</h4><p>Ryan te contacte sur WhatsApp</p></div>`;
+    <h4 id="pt5">Paiement reçu</h4><p>On te contacte sur WhatsApp</p></div>`;
 
 // S6 — pour tout le monde
 $('#s6').innerHTML = `
@@ -251,12 +264,12 @@ $('#s6').innerHTML = `
 $('#s7').innerHTML = `
   <div class="abs" id="logo7" style="left:960px;top:300px">${AMD.logoMark(170)}</div>
   <div class="abs word" id="w7" style="left:960px;top:480px;font-size:130px">${[...'Aide-moi'].map((c) => `<i>${c}</i>`).join('')}</div>
-  <div class="abs douala" id="d7" style="left:960px;top:575px">DOUALA</div>
-  <div class="abs h" id="t7" style="left:960px;top:700px;font-size:64px"><span id="t7a">Tu poses ta question.</span> <span id="t7b" class="gr">On t'aide.</span></div>
-  <div class="abs" id="ctas" style="left:960px;top:850px;display:flex;gap:18px"><span class="pill cta">${ic('help', 28)}Pose ta question gratuitement</span><span class="pill" style="background:#1fb956">${ic('whatsapp', 28)}WhatsApp</span></div>`;
+  <div class="abs h" id="t7" style="left:960px;top:640px;font-size:60px"><span id="t7a">Pose ta question</span> <span id="t7b" class="gr">gratuitement.</span></div>
+  <div class="abs" id="url7" style="left:960px;top:790px"><span class="urlpill">${ic('globe', 38, 2.2)}<b>aide-moi.vercel.app</b><span class="go">${ic('arrow', 30, 2.6)}</span></span></div>
+  <div class="abs" id="sub7" style="left:960px;top:900px;font-size:26px;color:#c7d2fe;font-weight:600;white-space:nowrap">Sans inscription · Réponse rapide · Aussi sur WhatsApp</div>`;
 
 /* =================== animation =================== */
-const CAPS = [[0.7, 6.1, 'Ton PC rame ? Ton téléphone ne s\'allume plus ? Ta clé USB est pleine de raccourcis ?'], [13.7, 19.8, 'Tu poses ta question, sur le site ou sur WhatsApp. Ryan te répond pas à pas.'], [22.7, 28.3, 'Des guides clairs et des vidéos d\'une minute règlent la plupart des pannes.'], [31.2, 37.5, 'Trop compliqué ? Dépannage à distance dès 5 000 FCFA, payé par Orange Money ou MTN MoMo.'], [40.2, 44.5, 'Étudiants, commerçants, tout le monde à Douala : plus de 400 personnes déjà aidées.']];
+const CAPS = [[0.7, 6.1, 'Ton PC rame ? Ton téléphone ne s\'allume plus ? Ta clé USB est pleine de raccourcis ?'], [13.7, 18.8, 'Tu poses ta question, sur le site ou sur WhatsApp. On te répond rapidement, pas à pas.'], [22.7, 28.3, 'Des guides clairs et des vidéos d\'une minute règlent la plupart des pannes.'], [31.2, 37.5, 'Trop compliqué ? Dépannage à distance dès 5 000 FCFA, payé par Orange Money ou MTN MoMo.'], [40.2, 44.6, 'Étudiants, commerçants, tout le monde : plus de 400 personnes déjà aidées à Douala.']];
 
 function s1(t) {
   if (!show($('#s1'), t, 0, 7.3)) return;
@@ -277,8 +290,7 @@ function s2(t) {
   S($('#logoBig'), { c: true, s: t < 6.95 ? 0 : E.spring(k) * (1 - ex * 0.2), r: (1 - E.out(k)) * -30, o: clamp((t - 6.95) / 0.1) * (1 - ex), y: -ex * 60 });
   $$('#w2 i').forEach((c, i) => { const r = rise(t, 7.2 + i * 0.05, 0.5, 70); S(c, { o: r.o * (1 - ex), y: r.y - ex * 60, b: r.b + ex * 8 }); });
   S($('#w2'), { c: true });
-  const d = clamp((t - 7.75) / 0.6); S($('#dla'), { c: true, o: d * (1 - ex), y: -ex * 60 }); $('#dla').style.letterSpacing = mix(1.2, 0.6, E.out(d)) + 'em';
-  $$('#tg2 > span').forEach((w, i, arr) => { const isG = i === arr.length - 1; const a2 = isG ? 10.4 : 8.4 + i * 0.12; const r = isG ? pop(t, a2, 0.5) : rise(t, a2, 0.5, 30); S(w, isG ? { o: r.o * (1 - ex), s: r.s } : { o: r.o * (1 - ex), y: r.y, b: r.b }); });
+  $$('#tg2 > span').forEach((w, i, arr) => { const isG = i === arr.length - 1; const a2 = isG ? 10.12 : 8.13 + i * 0.12; const r = isG ? pop(t, a2, 0.5) : rise(t, a2, 0.5, 30); S(w, isG ? { o: r.o * (1 - ex), s: r.s } : { o: r.o * (1 - ex), y: r.y, b: r.b }); });
   S($('#tg2'), { c: true, y: -ex * 60 });
 }
 
@@ -338,29 +350,32 @@ function s6(t) {
   const ex = P(t, 46.6, 0.55, 'in');
   [40.2, 40.97].forEach((a, k) => { const kk = P(t, a, 0.85, 'expo'); S($('#au' + k), { y: (1 - kk) * 700 - ex * 120, o: clamp((t - a) / 0.2) * (1 - ex), r: (1 - kk) * (k ? 6 : -6), b: ex * 10 }); });
   const c = rise(t, 41.8, 0.6, 50); S($('#cnt6'), { o: c.o * (1 - ex), y: c.y, b: c.b + ex * 10 });
-  $('#n6').textContent = fr(472 * P(t, 42.8, 1.4)) + (t > 44.1 ? '+' : '');
+  $('#n6').textContent = fr(472 * P(t, 42.55, 1.5)) + (t > 44.0 ? '+' : '');
   $$('#av6' + '0, #av61, #av62, #av63, #av64').forEach((a, k) => { const p = pop(t, 42.9 + k * 0.12, 0.5); S(a, { o: p.o * (1 - ex), s: p.s }); });
 }
 
 function s7(t) {
   if (!show($('#s7'), t, 47.0, 55)) return;
-  const k = clamp((t - 47.6) / 1.1);
-  S($('#logo7'), { c: true, s: t < 47.6 ? 0 : E.spring(k), o: clamp((t - 47.6) / 0.1), r: (1 - E.out(k)) * 25 });
-  $$('#w7 i').forEach((c, i) => { const r = rise(t, 47.75 + i * 0.045, 0.5, 60); S(c, { o: r.o, y: r.y, b: r.b }); });
+  const k = clamp((t - 47.45) / 1.1);
+  S($('#logo7'), { c: true, s: t < 47.45 ? 0 : E.spring(k), o: clamp((t - 47.45) / 0.1), r: (1 - E.out(k)) * 25 });
+  $$('#w7 i').forEach((c, i) => { const r = rise(t, 47.55 + i * 0.045, 0.5, 60); S(c, { o: r.o, y: r.y, b: r.b }); });
   S($('#w7'), { c: true });
-  const d = clamp((t - 48.2) / 0.6); S($('#d7'), { c: true, o: d }); $('#d7').style.letterSpacing = mix(1.2, 0.6, E.out(d)) + 'em';
-  const a = rise(t, 49.3, 0.5, 30), b = pop(t, 51.13, 0.5);
-  S($('#t7a'), { o: a.o, y: a.y, b: a.b }); S($('#t7b'), { o: b.o, s: b.s });
+  const a = rise(t, 48.85, 0.5, 30), b = rise(t, 49.6, 0.5, 30);
+  S($('#t7a'), { o: a.o, y: a.y, b: a.b }); S($('#t7b'), { o: b.o, y: b.y, b: b.b });
   S($('#t7'), { c: true });
-  const cta = rise(t, 52.0, 0.6, 40); S($('#ctas'), { c: true, o: cta.o, y: cta.y });
+  const u = pop(t, 50.41, 0.6); S($('#url7'), { c: true, o: u.o, s: u.s });
+  const sh = clamp((t - 51.2) / 0.9); $('#url7 .urlpill').style.backgroundPosition = `${(100 - sh * 200).toFixed(1)}% 0`;
+  const sb = rise(t, 51.9, 0.6, 20); S($('#sub7'), { c: true, o: sb.o, y: sb.y });
 }
 
 function globals(t) {
-  S($('#g1'), { x: 200 + Math.sin(t * 0.22) * 400, y: 100 + Math.cos(t * 0.18) * 200 });
-  S($('#g2'), { x: 1100 + Math.cos(t * 0.2) * 300, y: 400 + Math.sin(t * 0.26) * 220 });
-  S($('#grid'), { x: -(t * 12) % 80, y: -(t * 6) % 80 });
-  $('#indigo').style.opacity = (Math.max(bump(t, 6.9, 12.3, 0.35), bump(t, 47.4, 60, 0.5) * 0.9)).toFixed(3);
-  const fl = Math.max(bump(t, 6.9, 7.0, 0.06) * (1 - P(t, 6.98, 0.5)), bump(t, 47.55, 47.65, 0.05) * (1 - P(t, 47.62, 0.5)));
+  S($('#au1'), { x: 200 + Math.sin(t * 0.17) * 260, y: 80 + Math.cos(t * 0.13) * 120, r: -14 + Math.sin(t * 0.11) * 8 });
+  S($('#au2'), { x: 500 + Math.cos(t * 0.15) * 300, y: 640 + Math.sin(t * 0.19) * 110, r: 10 + Math.cos(t * 0.09) * 7 });
+  S($('#au3'), { x: 1150 + Math.sin(t * 0.21) * 220, y: -120 + Math.cos(t * 0.16) * 140, s: 1 + Math.sin(t * 0.3) * 0.08 });
+  S($('#beam'), { x: ((t * 70) % 3200) - 200, r: 18 });
+  BUBS.forEach((b, i) => { const y = ((b.y - t * b.v) % 1300 + 1300) % 1300 - 110; $('#bb' + i).setAttribute('transform', `translate(${(b.x + Math.sin(t * 0.4 + i) * 26).toFixed(1)} ${y.toFixed(1)}) rotate(${(b.r + Math.sin(t * 0.3 + i) * 6).toFixed(1)}) scale(${b.s})`); });
+  $('#indigo').style.opacity = (Math.max(bump(t, 6.9, 12.3, 0.35), bump(t, 47.3, 60, 0.5) * 0.9)).toFixed(3);
+  const fl = Math.max(bump(t, 6.9, 7.0, 0.06) * (1 - P(t, 6.98, 0.5)), bump(t, 47.4, 47.5, 0.05) * (1 - P(t, 47.47, 0.5)));
   $('#flash').style.opacity = (fl * 0.85).toFixed(3);
   S($('#mark'), { o: P(t, 13.2, 0.6) * (1 - P(t, 46.8, 0.4)), x: (1 - P(t, 13.2, 0.6)) * -30 });
   $('#black').style.opacity = P(t, 54.5, 0.5, 'inOut').toFixed(3);
